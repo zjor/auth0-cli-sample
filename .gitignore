@@ -1,2 +1,6 @@
+.env.sh
+
 .idea
 *.pyc
+
+target/

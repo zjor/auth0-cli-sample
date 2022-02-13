@@ -2,6 +2,8 @@ import os
 import time
 import dotenv
 import requests
+import logging
+from http.client import HTTPConnection
 from cli.auth0_protocol import GetDeviceCodeResponse, GetAccessTokenResponse, GetUserInfoResponse
 
 dotenv.load_dotenv()
@@ -9,6 +11,19 @@ dotenv.load_dotenv()
 AUTH0_AUDIENCE = os.getenv('AUTH0_AUDIENCE')
 AUTH0_CLIENT_ID = os.getenv('AUTH0_CLIENT_ID')
 AUTH0_BASE_URL = os.getenv('AUTH0_BASE_URL')
+
+
+def enable_debug_logging():
+    log = logging.getLogger('urllib3')
+    log.setLevel(logging.DEBUG)
+
+    # logging from urllib3 to console
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    log.addHandler(ch)
+
+    # print statements from `http.client.HTTPConnection` to console/stdout
+    HTTPConnection.debuglevel = 1
 
 
 def get_device_code():
