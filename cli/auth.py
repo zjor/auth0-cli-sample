@@ -81,6 +81,7 @@ if __name__ == "__main__":
             break
 
     if code == 200:
+        print(f"Access token: {access_token_response.access_token}")
         code, user_info = get_user_info(access_token_response.access_token)
         if user_info.error:
             print(f"Failed to get user info: {user_info.error} - {user_info.error_description}")
