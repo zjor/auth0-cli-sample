@@ -47,7 +47,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterAt(jwtTokenFilter(), BasicAuthenticationFilter.class);
 
         http.authorizeRequests()
-                .mvcMatchers("/").permitAll()
+                .antMatchers("/", "/static/**").permitAll()
+                .antMatchers("/swagger-ui/", "/swagger-ui.html", "/webjars/**", "/swagger-resources/**", "/v2/api-docs").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
+                .antMatchers("/api/**").authenticated()
                 .anyRequest().authenticated();
     }
 

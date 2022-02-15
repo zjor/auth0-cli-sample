@@ -23,6 +23,8 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 public class JwtTokenFilter extends AbstractPreAuthenticatedProcessingFilter {
 
+    public static final String BEARER_PREFIX = "Bearer ";
+
     private final String tenantUrl;
     private final JwkProvider jwkProvider;
 
@@ -51,10 +53,10 @@ public class JwtTokenFilter extends AbstractPreAuthenticatedProcessingFilter {
     @Override
     protected Object getPreAuthenticatedPrincipal(HttpServletRequest request) {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (isEmpty(header) || !header.startsWith("Bearer ")) {
+        if (isEmpty(header)) {
             return null;
         }
-        DecodedJWT jwt = validateAndDecodeJwt(header.split(" ")[1].trim());
+        DecodedJWT jwt = validateAndDecodeJwt(stripBearerPrefix(header));
 
         return JwtAuth.builder()
                 .subject(jwt.getSubject())
@@ -73,4 +75,13 @@ public class JwtTokenFilter extends AbstractPreAuthenticatedProcessingFilter {
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         super.setAuthenticationManager(authenticationManager);
     }
+
+    private String stripBearerPrefix(String value) {
+        if (value.startsWith(BEARER_PREFIX)) {
+            return value.split(" ")[1].trim();
+        } else {
+            return value;
+        }
+    }
+
 }
