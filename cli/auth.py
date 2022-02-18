@@ -1,21 +1,15 @@
-import os
 import time
-import dotenv
-import requests
 import logging
 import colorama
 from termcolor import colored
 from http.client import HTTPConnection
-from cli.auth0_client import Auth0Client
-from cli.auth0_protocol import GetDeviceCodeResponse, GetAccessTokenResponse, GetUserInfoResponse
+from cli.client.auth0.client import Auth0Client
 
 colorama.init()
 
-dotenv.load_dotenv()
 
-AUTH0_AUDIENCE = os.getenv('AUTH0_AUDIENCE')
-AUTH0_CLIENT_ID = os.getenv('AUTH0_CLIENT_ID')
-AUTH0_BASE_URL = os.getenv('AUTH0_BASE_URL')
+def white_bold(text):
+    return colored(text, 'white', attrs=['bold'])
 
 
 def enable_debug_logging():
@@ -35,8 +29,8 @@ if __name__ == "__main__":
     auth0_client = Auth0Client.get_instance()
 
     device_code_response = auth0_client.get_device_code()
-    print(f"Device code: {device_code_response.device_code}")
-    print(f"Please visit URL: {device_code_response.verification_uri_complete}")
+    print(f"Device code: {white_bold(device_code_response.device_code)}")
+    print(f"Please visit URL: {white_bold(device_code_response.verification_uri_complete)}")
 
     attempts = 0
     while True:
@@ -48,7 +42,7 @@ if __name__ == "__main__":
             break
 
     if code == 200:
-        print(f"Access token: {access_token_response.access_token}")
+        print(f"\nAccess token: {access_token_response.access_token}\n")
         code, user_info = auth0_client.get_user_info(access_token_response.access_token)
         if user_info.error:
             print(f"Failed to get user info: {user_info.error} - {user_info.error_description}")

@@ -1,7 +1,7 @@
 import os
 import dotenv
 import requests
-from cli.auth0_protocol import GetDeviceCodeResponse, GetAccessTokenResponse, GetUserInfoResponse
+from cli.client.auth0.protocol import GetDeviceCodeResponse, GetAccessTokenResponse, GetUserInfoResponse
 
 dotenv.load_dotenv()
 
