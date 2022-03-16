@@ -1,5 +1,7 @@
 import time
 
+CREDENTIALS_FILENAME = '.credentials'
+
 
 class RefreshableToken:
     def __init__(self, access_token: str = None, refresh_token: str = None, expires_at: int = None):
@@ -13,6 +15,11 @@ class RefreshableToken:
 
 
 class TokenStorage:
+
+    @staticmethod
+    def get_instance():
+        return TokenStorage(CREDENTIALS_FILENAME)
+
     def __init__(self, filename):
         self.filename = filename
 
@@ -30,7 +37,11 @@ class TokenStorage:
                     data[k] = v
             token = RefreshableToken()
             token.__dict__.update(data)
-            token.expires_at = int(token.expires_at)
-            return token
+
+            if token.access_token:
+                token.expires_at = int(token.expires_at)
+                return token
+            else:
+                return None
         except FileNotFoundError:
             return None

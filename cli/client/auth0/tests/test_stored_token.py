@@ -3,7 +3,7 @@ import time
 
 from cli.client.auth0.stored_token import RefreshableToken, TokenStorage
 
-STORAGE_FILENAME = '.credentials'
+STORAGE_FILENAME = '.credentials-test'
 
 
 class TestRefreshableToken:
